@@ -1,4 +1,6 @@
-Power Board Documentation
+# Power Board Documentation
+![image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/main/Hardware/Power_Board/Power_Board_3D_Front_PCB.png)
+
 Purpose of Board:
 - Turn on power and turn off power (Up to 250VAC at 20A)
 - Output 5V
