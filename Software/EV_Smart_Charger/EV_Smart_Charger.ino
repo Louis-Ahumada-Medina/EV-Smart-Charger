@@ -8,20 +8,22 @@
 ***********************************************************************/
 
 #include "EV_Smart_Charger.h"
-
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST);
 AnimatedGIF gif;
 
 void setup() {
-  Serial.println("Program Initiated");
+  //Start Serial
   Serial.begin(9600);
+  Serial.println("Program Initiating...");
 
-  SPI.begin(TFT_CLK, SD_MISO, TFT_MOSI, SD_CS);
-  tft.begin();
+  //Set up LCD
+  tft.begin();  //LCD
   tft.setRotation(3);
   tft.fillScreen(ILI9341_BLACK);
+  tft.fillScreen(ILI9341_BLUE);
   gif.begin(LITTLE_ENDIAN_PIXELS);
 
+  //Play Gif on LCD
   //if (gif.open((uint8_t *)Demoimage, sizeof(Demoimage), GIFDraw))
   //{
   //  while (gif.playFrame(true, NULL))
@@ -30,16 +32,24 @@ void setup() {
   //  gif.close();
   //}
 
+  SPI.begin(TFT_CLK, SD_MISO, TFT_MOSI, SD_CS); //SD Card
+  //Check if SD card inserted
   if (!SD.begin(SD_CS)) {
     Serial.println("Card Mount Failed");
-    return;
+    //////////////////////////////////////////////////Initiate no logging mode
   }
 
-  
+  writeFile(SD, "/DataLog.txt", "Current: 5A");
+
+  Serial.println("~~Initiation Finished~~");
+}
+
+void loop(void) {
 
 }
 
-void loop(void) {}
+
+
 
 //From exmaple
 // Draw a line of image directly on the LCD

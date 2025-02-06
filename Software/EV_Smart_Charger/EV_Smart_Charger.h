@@ -36,6 +36,8 @@
   *  SOFTWARE.
   */
 
+  //Note this code is the culmination of various sources with thier own license
+
 /************************************************************************
 * Title: Libraries & Dependacies
 ***********************************************************************/
@@ -43,9 +45,6 @@
 //No Redefinitions
 #ifndef EV_SMART_CHARGER_H
 #define EV_SMART_CHARGER_H
-
-//Functions File
-//#include "EV_Smart_Charger.cpp"
 
 //For SPI Functionality
 #include "SPI.h"
@@ -55,6 +54,13 @@
 #include "Adafruit_ILI9341.h"
 #include "AnimatedGIF.h"
 
+//SD Card
+#include "FS.h"
+#include "SD.h"
+
+//Timer
+#include "Simpletimer.h"
+
 #include "../test_images/Demoimage.h"
 
 /************************************************************************
@@ -62,15 +68,15 @@
 ***********************************************************************/
 
 //LCD
-#define TFT_DC 23    
-#define TFT_CS 18          
-#define TFT_MOSI 19 //Shared With SD Card
-#define TFT_CLK 21  //Shared With SD Card
-#define TFT_RST 22  
+#define TFT_DC 8    
+#define TFT_CS 7          
+#define TFT_MOSI 10 //Shared With SD Card
+#define TFT_CLK 19  //Shared With SD Card
+#define TFT_RST 11  
 
 //SD Card
-#define SD_MISO 20   
-#define SD_CS 11 
+#define SD_MISO 15   
+#define SD_CS 0  
 
 /************************************************************************
 * Title: Varibles Assignments 
@@ -91,7 +97,10 @@ void GIFDraw(GIFDRAW *pDraw);
 
 //SD_Card_Functions 
 void writeFile(fs::FS &fs, const char *path, const char *message);
+void appendFile(fs::FS &fs, const char *path, const char *message);
+void readFile(fs::FS &fs, const char *path);
 
+//Timer
 
 
 
