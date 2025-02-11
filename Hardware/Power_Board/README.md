@@ -29,4 +29,5 @@ V1.0
 V2.0
 
 - Removed BJT (Relay Control is 5v)
-- Added test to header pins
+- Added text to header pins
+- Added text to input and output power lugs
