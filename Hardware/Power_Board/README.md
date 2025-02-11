@@ -1,6 +1,6 @@
 # Power Board Documentation
-![Power_Board_3D_Front_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/179e2c16c8c6720629572131a6718b17f2b1724e/Hardware/Power_Board/Power_Board_3D_Front_PCB.png)
-![Power_Board/Power_Board_3D_Side_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/179e2c16c8c6720629572131a6718b17f2b1724e/Hardware/Power_Board/Power_Board_3D_Side_PCB.png)
+![Power_Board_3D_Front_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/e5d44b6adbc432fe177dfadae67e52083fe3890d/Hardware/Power_Board/Power_Board_3D_Front_PCB.png)
+![Power_Board/Power_Board_3D_Side_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/e5d44b6adbc432fe177dfadae67e52083fe3890d/Hardware/Power_Board/Power_Board_3D_Side_PCB.png)
 
 Purpose of Board:
 - Turn on power and turn off power (Up to 250VAC at 20A)
