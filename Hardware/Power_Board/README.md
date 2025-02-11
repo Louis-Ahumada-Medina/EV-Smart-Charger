@@ -1,4 +1,3 @@
-Title: Power_Board PCB Information
 # Power Board Documentation
 ![Power_Board_3D_Front_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/179e2c16c8c6720629572131a6718b17f2b1724e/Hardware/Power_Board/Power_Board_3D_Front_PCB.png)
 ![Power_Board/Power_Board_3D_Side_PCB Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/179e2c16c8c6720629572131a6718b17f2b1724e/Hardware/Power_Board/Power_Board_3D_Side_PCB.png)
@@ -20,3 +19,14 @@ Outputs:
 Materials:
 ![BOM Image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/179e2c16c8c6720629572131a6718b17f2b1724e/Hardware/Power_Board/BOM.png)
 
+Versions:
+
+V1.0
+
+- Initial Draft PCB and Schematic Layout
+- QR-Code to github repository
+
+V2.0
+
+- Removed BJT (Relay Control is 5v)
+- Added test to header pins
