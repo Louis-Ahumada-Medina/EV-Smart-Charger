@@ -59,24 +59,24 @@
 #include "SD.h"
 
 //Timer
-#include "Simpletimer.h"
+//#include "Simpletimer.h"
 
-#include "../test_images/Demoimage.h"
+#include "../test_images/wifi.c"
 
 /************************************************************************
 * Title: GPIO Assignments 
 ***********************************************************************/
 
 //LCD
-#define TFT_DC 8    
-#define TFT_CS 7          
-#define TFT_MOSI 10 //Shared With SD Card
-#define TFT_CLK 19  //Shared With SD Card
-#define TFT_RST 11  
+#define TFT_DC 3    
+#define TFT_CS 0          
+#define TFT_MOSI 1 //Shared With SD Card
+#define TFT_CLK 4  //Shared With SD Card
+#define TFT_RST 2  
 
 //SD Card
-#define SD_MISO 15   
-#define SD_CS 0  
+#define SD_MISO 6   
+#define SD_CS 5  
 
 /************************************************************************
 * Title: Varibles Assignments 
@@ -91,8 +91,9 @@
 ***********************************************************************/
 
 //LCD_Functions
-void testFillScreen(Adafruit_ILI9341 &tft);
-void testText(Adafruit_ILI9341 &tft);
+//void testFillScreen();
+//void testText();
+;
 void GIFDraw(GIFDRAW *pDraw);
 
 //SD_Card_Functions 

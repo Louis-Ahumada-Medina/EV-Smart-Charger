@@ -24,13 +24,11 @@ void setup() {
   gif.begin(LITTLE_ENDIAN_PIXELS);
 
   //Play Gif on LCD
-  //if (gif.open((uint8_t *)Demoimage, sizeof(Demoimage), GIFDraw))
-  //{
-  //  while (gif.playFrame(true, NULL))
-  //  {      
-  //  }
-  //  gif.close();
-  //}
+  if (gif.open((uint8_t *)wifi, sizeof(wifi), GIFDraw))
+  {
+    while (gif.playFrame(true, NULL)){}
+    gif.close();
+  }
 
   SPI.begin(TFT_CLK, SD_MISO, TFT_MOSI, SD_CS); //SD Card
   //Check if SD card inserted
@@ -39,7 +37,7 @@ void setup() {
     //////////////////////////////////////////////////Initiate no logging mode
   }
 
-  writeFile(SD, "/DataLog.txt", "Current: 5A");
+  writeFile(SD, "/Datatest.txt", "Current: 6A");
 
   Serial.println("~~Initiation Finished~~");
 }
@@ -138,4 +136,56 @@ void GIFDraw(GIFDRAW *pDraw) {
       tft.writePixels(usTemp, iWidth, false, false);
       tft.endWrite();
     }
+}
+
+/************************************************************************
+* Title: SD_Card_Functions.cpp
+* File Purpose: Stores SD card reelated functions
+***********************************************************************/
+
+//Source: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
+void writeFile(fs::FS &fs, const char *path, const char *message) {
+  Serial.printf("Writing file: %s\n", path);
+
+  File file = fs.open(path, FILE_WRITE);
+  if (!file) {
+    Serial.println("Failed to open file for writing");
+    return;
+  }
+  if (file.print(message)) {
+    Serial.println("File written");
+  } else {
+    Serial.println("Write failed");
+  }
+  file.close();
+}
+
+//Source: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
+void appendFile(fs::FS &fs, const char *path, const char *message) {
+  Serial.printf("Appending to file: %s\n", path);
+
+  File file = fs.open(path, FILE_APPEND);
+  if (!file) {
+    Serial.println("Failed to open file for appending");
+    return;
+  }
+  
+  file.print(message);
+  file.close();
+}
+
+//Source: https://randomnerdtutorials.com/esp32-microsd-card-arduino/
+void readFile(fs::FS &fs, const char *path) {
+  Serial.printf("Reading file: %s\n", path);
+
+  File file = fs.open(path);
+  if (!file) {
+    Serial.println("Failed to open file for reading");
+    return;
+  }
+
+  while (file.available()) {
+    Serial.write(file.read());
+  }
+  file.close();
 }
