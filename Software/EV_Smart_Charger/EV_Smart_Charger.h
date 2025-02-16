@@ -37,6 +37,30 @@
   */
 
   //Note this code is the culmination of various sources with thier own license
+  //Listed Below
+
+  //Code from SDWebServer
+  /*
+  Copyright (c) 2015 Hristo Gochkov. All rights reserved.
+  This file is part of the WebServer library for Arduino environment.
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  */
+
+  //Code from 
+
 
 /************************************************************************
 * Title: Libraries & Dependacies
@@ -63,20 +87,26 @@
 
 #include "../test_images/wifi.c"
 
+//Webserver
+#include <WiFi.h>
+#include <NetworkClient.h>
+#include <WebServer.h>
+#include <ESPmDNS.h>
+
 /************************************************************************
 * Title: GPIO Assignments 
 ***********************************************************************/
 
 //LCD
-#define TFT_DC 3    
+#define TFT_DC 2    
 #define TFT_CS 0          
-#define TFT_MOSI 1 //Shared With SD Card
-#define TFT_CLK 4  //Shared With SD Card
-#define TFT_RST 2  
+#define TFT_MOSI 3 //Shared With SD Card
+#define TFT_CLK 6  //Shared With SD Card
+#define TFT_RST 1  
 
 //SD Card
-#define SD_MISO 6   
-#define SD_CS 5  
+#define SD_MISO 4   
+#define SD_CS 5   
 
 /************************************************************************
 * Title: Varibles Assignments 
@@ -86,6 +116,10 @@
 #define DISPLAY_WIDTH 320
 #define DISPLAY_HEIGHT 240
 
+//Webserver
+const char *host = "SmartChargerEV";
+static bool hasSD = false;
+
 /************************************************************************
 * Title: Function Prototypes 
 ***********************************************************************/
@@ -93,7 +127,7 @@
 //LCD_Functions
 //void testFillScreen();
 //void testText();
-;
+
 void GIFDraw(GIFDRAW *pDraw);
 
 //SD_Card_Functions 
@@ -102,6 +136,9 @@ void appendFile(fs::FS &fs, const char *path, const char *message);
 void readFile(fs::FS &fs, const char *path);
 
 //Timer
+
+
+
 
 
 
