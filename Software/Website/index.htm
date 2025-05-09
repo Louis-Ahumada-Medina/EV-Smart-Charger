@@ -11,6 +11,8 @@ Refrences:
 HTTPGET Arduino: https://randomnerdtutorials.com/esp32-http-get-post-arduino/
 Base Control code: https://www.youtube.com/watch?v=To3TIOFX6cA
 HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-to-update-and-display-sensor-values/
+Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs_switch 
+    -Espectially function updateTime() and executeSchedule()
 -->
 
 <!DOCTYPE html>
@@ -53,18 +55,463 @@ HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-
 
     </div>
 
+    <div>
+        <form action="sendDatatoHost()">
+        <table class="scheduler">
+            <tr>
+                <th> </th>
+                <th class="thcust">Sunday</th>
+                <th class="thcust">Monday</th>
+                <th class="thcust">Tuesday</th>
+                <th>Wednesday</th>
+                <th class="thcust">Thursday</th>
+                <th class="thcust">Friday</th>
+                <th class="thcust">Saturday</th>
+            </tr>
+            <tr>
+                <td>Start: </td>
+                <td>
+                <select name="sundaystart" id="sundaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="mondaystart" id="mondaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="tuesdaystart" id="tuesdaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="wednesdaystart" id="wednesdaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="thursdaystart" id="thursdaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="fridaystart" id="fridaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="saturdaystart" id="saturdaystart">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            </tr>
+            <tr>
+                <td>End: </td>
+                <td>
+                <select name="sundayend" id="sundayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="mondayend" id="mondayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="tuesdayend" id="tuesdayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="wednesdayend" id="wednesdayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="thursdayend" id="thursdayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="fridayend" id="fridayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            <td>
+                <select name="saturdayend" id="saturdayend">
+                    <option value="0">0:00</option>
+                    <option value="1">1:00</option>
+                    <option value="2">2:00</option>
+                    <option value="3">3:00</option>
+                    <option value="4">4:00</option>
+                    <option value="5">5:00</option>
+                    <option value="6">6:00</option>
+                    <option value="7">7:00</option>
+                    <option value="8">8:00</option>
+                    <option value="9">9:00</option>    
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>    
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>    
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>    
+                    <option value="24">24:00</option>
+                </select>
+            </td>
+            </tr>
+        </table>
+        <p class="formbutton" id="ButtonResult"> </p>
+        <input class="formbutton" type="button" onclick="sendScheduleDatatoHost()" value="💾 Save Schedule">
+        <input class="formbutton" type="button" onclick="getScheduleDatafromHost()" value="🔁 Refresh Now">
+        </form>
+    </div>
+
+
     <script>
         //Variables
         let Data = "000.0_00.0_00.0_0.00_0.0";
-        //Array that holds sensor values(data)
+        let scheduleData = "0_0_0_0_0_0_0_0_0_0_0_0_0_0";
+        //Array that holds sensor values(Data)
         //Index 0: Voltage 
         //Index 1: Current
         //Index 2: Temperature
         //Index 3: Power
         //Index 4: Power Status
         let dataArray = ["0","0","0","0","0"];
+        //Array that holds schedule values(scheduleData)
+        //Index 0-1: Sunday(start-end) 
+        //Index 2-3: Monday
+        //Index 4-5: Tuesday
+        //Index 6-7: Wednesday
+        //Index 8-9: Thrusday
+        //Index 10-11: Friday
+        //Index 12-13: Saturday
+        let dataScheduleArray = ["0","0","0","0","0","0","0","0","0","0","0","0","0","0"];
         let currentTime = "0";
         let currentDate = "0";
+        let currentWeekDay = "0";
+        let currentHour = "-1";
 
         //Updates local time
         function updateTime() {
@@ -75,7 +522,11 @@ HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-
             currentDate = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             //Display time value
             timeDisplay.textContent = `${currentDate}\n${currentTime}`;
-            //sendTime();
+
+            //Determine day and hour for schedule
+            currentWeekDay = now.getDay();
+            currentHour = now.getHours();
+            //executeSchedule();
         }
 
         //Turn on and off power
@@ -97,7 +548,10 @@ HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-
             xhttp.send(); //Send to MC
         }
 
+        //Gets sensor data and power state from Host
         function getData() {
+            document.getElementById("ButtonResult").innerHTML = " ";
+
             //Create refrences to the desired powerValue
             const temperature = document.getElementById('temperatureValue');
             const voltage = document.getElementById('voltageValue');
@@ -136,24 +590,198 @@ HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-
                     }
                 }
             };
-            xhttp.open("GET", "getData", true); //Send "getData" to MC to trigger response
+            //Send "getData" to MC to trigger response
+            xhttp.open("GET", "getData", true);
             xhttp.send();
         }
 
-        //function sendDatatoHost() {
-            //Send 0 or 1 to microcontroller(MC1)
-        //    var xhttp = new XMLHttpRequest(); //Communication object
-        //    let temp = "sendDatatoHost?sensorData=";
-        //    let result = [temp,data].join("");
+        //Sends the schedule data to Host
+        function sendScheduleDatatoHost() {
 
-        //    xhttp.open("GET", result, true); 
+            document.getElementById("ButtonResult").innerHTML = "✅ Saved.";
 
-        //    xhttp.send(); //Send to MC
-        //}
+            //Create refrences
+            const sundayend = document.getElementById("sundayend").value;
+            const sundaybegin = document.getElementById("sundaystart").value; 
+            const mondayend = document.getElementById("mondayend").value;
+            const mondaybegin = document.getElementById("mondaystart").value;	
+            const tuesdayend = document.getElementById("tusdayend").value;
+            const tuesdaybegin = document.getElementById("tuesdaystart").value; 
+            const wednesdayend = document.getElementById("wednesdayend").value;
+            const wednesdaybegin = document.getElementById("wednesdaystart").value;	
+            const thursdayend = document.getElementById("thursdayend").value;
+            const thursdaybegin = document.getElementById("thursdaystart").value; 
+            const fridayend = document.getElementById("fridayend").value;
+            const fridaybegin = document.getElementById("fridaystart").value;	
+            const saturdayend = document.getElementById("saturdayend").value;
+            const saturdaybegin = document.getElementById("saturdaystart").value; 
+
+            var xhttp = new XMLHttpRequest(); //Communication object
+
+            //Format schedule into single string
+            let temp = "sendDatatoHost?schedule=";
+            scheduledata = [sundaybegin,sundayend,
+    	        mondaybegin,mondayend,
+                tuesdaybegin,tuesdayend,
+                wednesdaybegin,wednesdayend,
+                thursdaybegin,thursdayend,
+                fridaybegin,fridayend,
+                saturdaybegin,saturdayend
+            ].join("_");
+            let result = [temp,scheduledata].join("");
+
+            xhttp.open("GET", result, true);  //Load in the result string to the MC
+
+            xhttp.send(); //Send to MC
+        }
+
+        //Gets the schedule data from Host
+        function getScheduleDatafromHost(){
+            var xhttp = new XMLHttpRequest(); //Communication object
+
+            //Receive Values
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    scheduleData = this.responseText;
+                    dataScheduleArray = scheduleData.split("_");
+
+                    //Assing value based on index
+                    document.getElementById("sundayend").value = dataScheduleArray[1];
+                    document.getElementById("sundaystart").value = dataScheduleArray[0]; 
+                    document.getElementById("mondayend").value = dataScheduleArray[3];
+                    document.getElementById("mondaystart").value = dataScheduleArray[2];	
+                    document.getElementById("tusdayend").value = dataScheduleArray[5];
+                    document.getElementById("tuesdaystart").value = dataScheduleArray[4]; 
+                    document.getElementById("wednesdayend").value = dataScheduleArray[7];
+                    document.getElementById("wednesdaystart").value = dataScheduleArray[6];	
+                    document.getElementById("thursdayend").value = dataScheduleArray[9];
+                    document.getElementById("thursdaystart").value = dataScheduleArray[8]; 
+                    document.getElementById("fridayend").value = dataScheduleArray[11];
+                    document.getElementById("fridaystart").value = dataScheduleArray[10];	
+                    document.getElementById("saturdayend").value = dataScheduleArray[13];
+                    document.getElementById("saturdaystart").value = dataScheduleArray[12]; 
+                }
+            };
+
+            document.getElementById("ButtonResult").innerHTML = "✅ Refreshed.";
+
+            xhttp.open("GET", "sendScheduleDatatoHost", true); //Send "getData" to MC to trigger response
+            xhttp.send();
+        }
+
+        //Turns on or off charged based on schedule
+        function executeSchedule(){
+            //Create refrences
+            const sundayend = document.getElementById("sundayend").value;
+            const sundaybegin = document.getElementById("sundaystart").value; 
+            const mondayend = document.getElementById("mondayend").value;
+            const mondaybegin = document.getElementById("mondaystart").value;	
+            const tuesdayend = document.getElementById("tusdayend").value;
+            const tuesdaybegin = document.getElementById("tuesdaystart").value; 
+            const wednesdayend = document.getElementById("wednesdayend").value;
+            const wednesdaybegin = document.getElementById("wednesdaystart").value;	
+            const thursdayend = document.getElementById("thursdayend").value;
+            const thursdaybegin = document.getElementById("thursdaystart").value; 
+            const fridayend = document.getElementById("fridayend").value;
+            const fridaybegin = document.getElementById("fridaystart").value;	
+            const saturdayend = document.getElementById("saturdayend").value;
+            const saturdaybegin = document.getElementById("saturdaystart").value; 
+
+            const test = document.getElementById('test');
+
+            test.innerHTML = "inside execute";
+
+            //Determine what day it is
+            switch (currentWeekDay) {
+            case 0: //Sunday
+                //Only automatically control power when scheudle is set to a value
+                if(sundaybegin == sundayend){break;}
+                else if( currentHour >= sundaybegin && currentHour < sundayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            case 1: //Monday
+                //Only automatically control power when scheudle is set to a value
+                if(mondaybegin == mondayend){break;}
+                else if( currentHour >= mondaybegin && currentHour < mondayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            case 2: //Tuesday
+                //Only automatically control power when scheudle is set to a value
+                if(thursdaybegin == thursdayend){break;}
+                else if( currentHour >= thursdaybegin && currentHour < tuesdayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            case 3: //Wednesday
+                //Only automatically control power when scheudle is set to a value
+                if(wednesdaybegin == wednesdayend){break;}
+                else if( currentHour >= wednesdaybegin && currentHour < wednesdayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            case 4: //Thursday
+                //Only automatically control power when scheudle is set to a value
+                if(thursdaybegin == thursdayend){break;}
+                else if( currentHour >= thursdaybegin && currentHour < thursdayend){
+                    document.getElementById("powerStatus").checked = true;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus").checked = false;
+                    powerToggle();
+                }
+                break;
+            case 5: //Friday
+                //Only automatically control power when scheudle is set to a value
+                if(fridaybegin == fridayend){break;}
+                else if( currentHour >= fridaybegin && currentHour < fridayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            case  6: //Saturday
+                //Only automatically control power when scheudle is set to a value
+                if(saturdaybegin == saturdayend){break;}
+                else if( currentHour >= saturdaybegin && currentHour < saturdayend){
+                    document.getElementById("powerStatus") = 1;
+                    powerToggle();
+                }
+                else {
+                    document.getElementById("powerStatus") = 0;
+                    powerToggle();
+                }
+                break;
+            }
+        }
 
         setInterval(function() { getData(); }, 1000); //Update data every 1000ms
-        setInterval(updateTime, 500); //Update time every 1000ms
-
+        setInterval(updateTime, 500); //Update time every 500ms
     </script>
 
 

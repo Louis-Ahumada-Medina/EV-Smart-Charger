@@ -23,7 +23,7 @@
 #define SD_CLK 8
 #define SD_CS 9
 
-//LCD Pins
+//LCD Pin
 #define TFT_DC 12    
 #define TFT_CS 14         
 #define TFT_MOSI 11 
@@ -38,7 +38,7 @@
 //PZEM2 Communication Pins
 //#define PZEM2_RX_PIN 6
 //#define PZEM2_TX_PIN 5
-//#define PZEM2_SERIAL Serial1
+//#define PZEM2_SERIAL Serial2
 
 //Variables
 const char *ssid = "Louis_Ahumada_iPhone";        //Internet variable
@@ -51,19 +51,26 @@ static bool hasSD = 0;                            //System Status
 static bool offlineMode = 1;                      //System Status 
 String dataPacket = "000.0_00.0_00.0_0.00_0";     //Data
 String relayState = "0";                          //Data
-String voltage = "000.0";                         //Data
-String current = "00.0";                          //Data
+String voltage1 = "000.0";                         //Data
+String current1 = "00.0";                          //Data
+String wattage1 = "0.00";                          //Data
+String voltage2 = "000.0";                         //Data
+String current2 = "00.0";                          //Data
+String wattage2 = "0.00";                          //Data
 String temperature = "00.0";                      //Data
-String wattage = "0.00";                          //Data
 int timer = 0;                                    //Counts up to 5 minutes
 int offset = 0;                                   //Timer offset
 String startTime = "0";                           //Time stamp of system initialization
 String endTime = "0";                             //5 minute Time stamp
+String scheduleData = "0_0_0_0_0_0_0_0_0_0_0_0_0_0"; //Data
 
 //Objects
 WebServer server(80);                             //Wifi port
 File uploadFile;                                  //MicroSD card
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST); //LCD
+//PZEM004Tv30 pzem1(PZEM1_SERIAL, PZEM1_RX_PIN, PZEM1_TX_PIN); //Power Sensor1
+//PZEM004Tv30 pzem2(PZEM2_SERIAL, PZEM2_RX_PIN, PZEM2_TX_PIN); //Power Sensor2
+
 
 void setup() {
   Serial.begin(115200);
@@ -216,7 +223,9 @@ void initServer(){
   server.on("/powerControl", powerControl);  //Routine to handle powerControl GET
   server.on("/getData", sendData); //Routine to handle getData GET
   server.on("/sendTime", getTime); //Routine to handle getTime GET
-  server.on("/sendDatatoHost", receiveData);  //Routiune to handle getDataFromWebsite
+  server.on("/sendScheduleDatatoHost", receiveScheduleData);  //Routiune to handle sendScheduleDatatoHost
+  server.on("/getScheduleDatafromHost", sendScheduleData);  //Routiune to handle getScheduleDatafromHost
+
 
   //Begin Server
   server.begin();
@@ -504,7 +513,7 @@ void powerControl() {
 void sendData(){
   requestDataUpdate();
   //send Data(V,A,T,P,R)
-  Serial.println("Sending to Server: "+dataPacket);
+  Serial.println("Sending data values to Server: "+dataPacket);
   server.send(200, "text/plane", dataPacket);
 }
 
@@ -552,25 +561,43 @@ String getTime(){
   return result;
 }
 
-/**********************************************************************************
-* Functions for Data
-**********************************************************************************/
-
 //Updates Sensor Values /////////////////////////FINISH
 void requestDataUpdate(){
 
   //Call functions to assign value to stuff
-  voltage = "11.1";
+  // voltage1 = pzem1.voltage();
+  // current1 = pzem1.current();
+  // wattage1 = pzem1.power();
+
+  // voltage2 = pzem2.voltage();
+  // current2 = pzem2.current();
+  // wattage2 = pzem2.power();
 
   //Format: dataPacket = "Voltage_Current_Temp_Power_RelayState"
   dataPacket = voltage + "_" + current + "_" + temperature + "_" + wattage + "_" + relayState;
 }
 
-//Recieve Data from Server
-void receiveData() {
-  String sensorData = server.arg("sensorData");
-  Serial.println("Recived data: "+sensorData);
-  server.send(200, "text/plane", sensorData); //Send web page
+//Recieve Schedule Data from Server
+void receiveScheduleData() {
+  scheduleData = server.arg("schedule");
+  Serial.println("Recived data: "+scheduleData);
+
+  ////////////////////////////////////////////////////PUT IN CODE FOR SAVING DATA TO FILE maybe?
+
+
+  //rewrite scheudleData to be text file value
+
+  server.send(200, "text/plane", scheduleData); //Send scheduleData value to web page
+}
+
+//Send Schedule Data to Server
+void sendScheduleData() {
+  ////////////////////////////////////////////////////PUT IN CODE FOR retriving DATA from FILE maybe?
+
+
+
+  Serial.println("Sending schedule to Server: "+scheduleData);
+  server.send(200, "text/plane", scheduleData);
 }
 
 /**********************************************************************************
@@ -696,6 +723,13 @@ void updateLCD(){
       tft.setTextColor(ILI9341_GREEN);
       tft.setCursor(99,30);
       tft.print("Connected\n");
+
+      //Steps and troubleshooting wifi
+      //tft.println("If you want to enter Online mode ensure:");
+      //tft.println("-Wifi is within range");
+      //tft.println("-Wifi credentials are correct(MicroSD/SD card -> config.txt)");
+      //tft.println("-Wifi Network is 2.4GHz");
+      //tft.println("Disconnect and reconnect EV Smart Charger from power to switch modes");
     }
     else{
       //Memory device status
@@ -704,6 +738,11 @@ void updateLCD(){
       tft.setTextColor(ILI9341_RED);
       tft.print("Disconnected");
 
+      //Steps and troubleshooting memory device
+      //tft.println("");
+      //tft.println("If you want to enter Online mode ensure:");
+      //tft.println("-MicroSD or SD card is inserted");
+      //tft.println("Disconnect and reconnect EV Smart Charger from power to switch modes");
     }
     //Could not connect to internet state
     tft.setTextColor(ILI9341_WHITE);

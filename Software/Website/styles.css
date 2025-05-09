@@ -3,7 +3,7 @@ html {
     display: inline-block; 
     margin: 0px auto; 
     text-align: center;
-}
+} 
 
 .h1 {
     font-size: 24px;
@@ -64,8 +64,8 @@ body {
 }
 
 .battery {
-    height: 80px;
-    width: 50px;
+    height: 60px;
+    width: 30px;
     display: block;
     margin: 10px auto;
     position: relative;
@@ -115,4 +115,27 @@ body {
 /* When the checkbox is checked, change object color to green */
 .power-button input:checked ~ .power_checkmark {
     background-color: #29eb0f;
+}
+
+/* CSS for scheduling */
+.scheduler{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.formbutton{
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.thcust{
+    padding: 10px;
+}
+
+.thcust2{
+    padding-left: 10px;
+}
+.thcust3{
+    padding-right: 10px;
 }
