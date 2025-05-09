@@ -1,0 +1,161 @@
+<!--
+Creaters: Louis Ahumada Medina & Tim Do
+Project partners: Louis Ahumada Medina, Tim Do, & Juan Saucedo
+
+Description:
+This code host a website for the EV Smart Charger Project. It operates on
+an ESP32-C3. This website utilizes HTML, CSS, and JS. This file is able to
+send and receive data from the microcontroller(MC). 
+
+Refrences:
+HTTPGET Arduino: https://randomnerdtutorials.com/esp32-http-get-post-arduino/
+Base Control code: https://www.youtube.com/watch?v=To3TIOFX6cA
+HTTP update values: https://circuits4you.com/2018/11/20/web-server-on-esp32-how-to-update-and-display-sensor-values/
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Smart Charger</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div> <!--The Header text and power button-->
+            <label class="power-button">
+                <input type="checkbox" id="powerStatus" onclick="powerToggle()">
+                <span class="h1">EV SMART CHARGER</span>
+                <img class = "power_checkmark" src="power.png" alt="power button icon">
+            </label>
+        </div>
+
+        <div> <!--The battery Gif-->
+            <img id = "battery" class = "battery" src="NotCharging.png" alt="not charging icon">
+        </div>
+
+        <!--The displayed wifi status-->
+        <div id="chargingStatus" class="stats">❌Disconnected</div>
+
+        <!--The displayed local time status-->
+        <div id="timeValue" class="stats"></div>
+
+        <!--The displayed power-->
+        <div id="WattageValue" class="stats">&#x26A1; Power Draw: 0 kWh</div>
+
+        <!--The displayed Temperature,voltage, and current value-->
+        <div class="gauge">
+            <div id="temperatureValue">&#x1F321; Temp: 0°C</div>
+            <div id="voltageValue">&#x26A1; Volts: 0V</div>
+            <div id="currentValue">&#x1F4A1; Amps: 0A</div>
+        </div>
+
+    </div>
+
+    <script>
+        //Variables
+        let Data = "000.0_00.0_00.0_0.00_0.0";
+        //Array that holds sensor values(data)
+        //Index 0: Voltage 
+        //Index 1: Current
+        //Index 2: Temperature
+        //Index 3: Power
+        //Index 4: Power Status
+        let dataArray = ["0","0","0","0","0"];
+        let currentTime = "0";
+        let currentDate = "0";
+
+        //Updates local time
+        function updateTime() {
+            const timeDisplay = document.getElementById('timeValue');
+            now = new Date();
+            //Process time values
+            currentTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+            currentDate = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            //Display time value
+            timeDisplay.textContent = `${currentDate}\n${currentTime}`;
+            //sendTime();
+        }
+
+        //Turn on and off power
+        function powerToggle() {
+            //Create refrences to the desired ID
+            const powerButton = document.getElementById("powerStatus");
+
+            //Send 0 or 1 to microcontroller(MC1)
+            var xhttp = new XMLHttpRequest(); //Communication object
+            if(powerButton.checked == true){
+                //Create message with value of 1
+                xhttp.open("GET", "powerControl?powerState=1", true); 
+            }
+            else{
+                //Create message with value of 0
+                xhttp.open("GET", "powerControl?powerState=0", true);
+            }
+
+            xhttp.send(); //Send to MC
+        }
+
+        function getData() {
+            //Create refrences to the desired powerValue
+            const temperature = document.getElementById('temperatureValue');
+            const voltage = document.getElementById('voltageValue');
+            const current = document.getElementById('currentValue');
+            const powerButton = document.getElementById("powerStatus");
+            const chargingStatus = document.getElementById('chargingStatus');
+            const battery = document.getElementById('battery');
+            const wattage = document.getElementById('WattageValue');
+
+            var xhttp = new XMLHttpRequest(); //Communication object
+
+            //Receive Values
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    data = this.responseText;
+                    dataArray = data.split("_");
+
+                    voltage.textContent = `⚡ Volts: ${dataArray[0]}V`; //Change displayed voltage
+                    current.textContent = `💡 Current: ${dataArray[1]}A`; //Change displayed current
+                    wattage.textContent = `⚡ Power: ${dataArray[3]}kW`; //Change displayed power
+                    temperature.textContent = `🌡 Temp: ${dataArray[2]}°C`; //Change displayed temperature
+                   
+                    if (dataArray[4] == "1"){ //Update Charging Status
+                        powerButton.checked = 1;
+                        battery.src = "Charging.gif"; //Change gif
+                        chargingStatus.textContent = "📶 Charging";
+                        chargingStatus.style.color = "#76C77A";
+                        wattage.style.color = "#76C77A";
+                    }
+                    else{
+                        powerButton.checked = 0;
+                        battery.src = "NotCharging.png";//Change gif
+                        chargingStatus.textContent = "❌ Not Charging";
+                        chargingStatus.style.color = "#D9534F";
+                        wattage.style.color = "#D9534F";
+                    }
+                }
+            };
+            xhttp.open("GET", "getData", true); //Send "getData" to MC to trigger response
+            xhttp.send();
+        }
+
+        //function sendDatatoHost() {
+            //Send 0 or 1 to microcontroller(MC1)
+        //    var xhttp = new XMLHttpRequest(); //Communication object
+        //    let temp = "sendDatatoHost?sensorData=";
+        //    let result = [temp,data].join("");
+
+        //    xhttp.open("GET", result, true); 
+
+        //    xhttp.send(); //Send to MC
+        //}
+
+        setInterval(function() { getData(); }, 1000); //Update data every 1000ms
+        setInterval(updateTime, 500); //Update time every 1000ms
+
+    </script>
+
+
+</body>
+

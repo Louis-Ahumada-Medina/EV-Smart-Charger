@@ -1,0 +1,118 @@
+html { 
+    font-family: Arial; 
+    display: inline-block; 
+    margin: 0px auto; 
+    text-align: center;
+}
+
+.h1 {
+    font-size: 24px;
+    font-weight: bold;
+    top: 5px;
+    margin-right: 10px;
+}
+
+p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+body {
+    background-color: #282C34;
+    color: #EAEAEA;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Custom Classes */
+.group {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.wifi {
+    font-size: 14px;
+    color: green;
+    margin-top: 10px;
+}
+
+.time {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.stats {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.power {
+    font-size: 16px;
+    font-weight: bold;
+    color: #76C77A;
+    margin-top: 10px;
+}
+
+.container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.battery {
+    height: 80px;
+    width: 50px;
+    display: block;
+    margin: 10px auto;
+    position: relative;
+
+}
+
+.gauge {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+}
+
+.gauge div {
+    flex: 1;
+    text-align: center;
+}
+
+/* CSS for Checkbox power button */
+.power-button{
+    position: relative;
+    top: 5px;
+}
+  
+/* Hide the browser's default checkbox */
+.container input {
+    /*position: absolute;*/
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+  
+/* Create a custom checkbox */
+.power_checkmark {
+    position: relative;
+    top: 5px;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    font-size: 22px;
+    background-color: #de1414;
+    font-weight: bold;
+    text-align: right;
+    color:#282C34;
+}
+
+/* When the checkbox is checked, change object color to green */
+.power-button input:checked ~ .power_checkmark {
+    background-color: #29eb0f;
+}
