@@ -1,3 +1,3 @@
 # ESP32-C3 Protoboard
-![image](https://github.com/user-attachments/assets/e4ddbd11-5596-4449-a75c-893454783621)
+![image](https://github.com/Louis-Ahumada-Medina/EV-Smart-Charger/blob/main/Hardware/ESP32-C3%20Protoboard/Picture.jpg)
 
