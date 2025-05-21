@@ -490,6 +490,7 @@ Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs
 
     <script>
         //Variables
+        let initSchedule = "FALSE";
         let Data = "000.0_00.0_00.0_0.00_0.0";
         let scheduleData = "0_0_0_0_0_0_0_0_0_0_0_0_0_0";
         //Array that holds sensor values(Data)
@@ -639,6 +640,8 @@ Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs
         function getScheduleDatafromHost(){
             var xhttp = new XMLHttpRequest(); //Communication object
 
+            document.getElementById("ButtonResult").innerHTML = "✅ Refreshed.";
+
             //Receive Values
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
@@ -663,8 +666,6 @@ Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs
                 }
             };
 
-            document.getElementById("ButtonResult").innerHTML = "✅ Refreshed.";
-
             xhttp.open("GET", "sendScheduleDatatoHost", true); //Send "getData" to MC to trigger response
             xhttp.send();
         }
@@ -686,10 +687,6 @@ Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs
             const fridaybegin = document.getElementById("fridaystart").value;	
             const saturdayend = document.getElementById("saturdayend").value;
             const saturdaybegin = document.getElementById("saturdaystart").value; 
-
-            const test = document.getElementById('test');
-
-            test.innerHTML = "inside execute";
 
             //Determine what day it is
             switch (currentWeekDay) {
@@ -780,8 +777,16 @@ Getting and Utilized time: https://www.w3schools.com/js/tryit.asp?filename=tryjs
             }
         }
 
+        //Initialized the Schedule on boot up
+        function initSchedule(){
+            if(initSchedule != "FALSE" ){
+                getScheduleDatafromHost();
+            }
+        }
+
         setInterval(function() { getData(); }, 1000); //Update data every 1000ms
         setInterval(updateTime, 500); //Update time every 500ms
+        //setInterval(initSchedule(), 50); //Update time every 50ms
     </script>
 
 
