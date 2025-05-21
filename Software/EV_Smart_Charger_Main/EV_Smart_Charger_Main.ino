@@ -31,18 +31,21 @@
 #define TFT_RST 13 
 
 //PZEM1 Communication Pins
-//#define PZEM1_RX_PIN 6
-//#define PZEM1_TX_PIN 5
-//#define PZEM1_SERIAL Serial1
+#define PZEM1_RX_PIN 21
+#define PZEM1_TX_PIN 47
+#define PZEM1_SERIAL Serial1
 
 //PZEM2 Communication Pins
-//#define PZEM2_RX_PIN 6
-//#define PZEM2_TX_PIN 5
-//#define PZEM2_SERIAL Serial2
+#define PZEM2_RX_PIN 45
+#define PZEM2_TX_PIN 35
+#define PZEM2_SERIAL Serial1
+
+//RGB LED
+#define LED_PIN 48
 
 //Variables
 const char *ssid = "Louis_Ahumada_iPhone";        //Internet variable
-const char *password = "01234567";                //Internet variable
+const char *password = "012345678";                //Internet variable
 const char *host = "SmartChargerEV";              //Internet variable
 const char* ntpServer = "pool.ntp.org";           //Location to get time from
 const long  gmtOffset_sec = -28800;               //Local Time variable
@@ -51,12 +54,15 @@ static bool hasSD = 0;                            //System Status
 static bool offlineMode = 1;                      //System Status 
 String dataPacket = "000.0_00.0_00.0_0.00_0";     //Data
 String relayState = "0";                          //Data
-String voltage1 = "000.0";                         //Data
-String current1 = "00.0";                          //Data
-String wattage1 = "0.00";                          //Data
-String voltage2 = "000.0";                         //Data
-String current2 = "00.0";                          //Data
-String wattage2 = "0.00";                          //Data
+float voltage1 = 0;                         //Data
+float current1 = 0;                          //Data
+float wattage1 = 0;                          //Data
+float voltage2 = 0;                         //Data
+float current2 = 0;                          //Data
+float wattage2 = 0;                          //Data
+String voltage = "000.0";                         //Data
+String current = "00.0";                          //Data
+String wattage = "0.00";                          //Data
 String temperature = "00.0";                      //Data
 int timer = 0;                                    //Counts up to 5 minutes
 int offset = 0;                                   //Timer offset
@@ -68,12 +74,14 @@ String scheduleData = "0_0_0_0_0_0_0_0_0_0_0_0_0_0"; //Data
 WebServer server(80);                             //Wifi port
 File uploadFile;                                  //MicroSD card
 Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_RST); //LCD
-//PZEM004Tv30 pzem1(PZEM1_SERIAL, PZEM1_RX_PIN, PZEM1_TX_PIN); //Power Sensor1
-//PZEM004Tv30 pzem2(PZEM2_SERIAL, PZEM2_RX_PIN, PZEM2_TX_PIN); //Power Sensor2
-
+PZEM004Tv30 pzem1(PZEM1_SERIAL, PZEM1_RX_PIN, PZEM1_TX_PIN); //Power Sensor1
+PZEM004Tv30 pzem2(PZEM2_SERIAL, PZEM2_RX_PIN, PZEM2_TX_PIN); //Power Sensor2
 
 void setup() {
   Serial.begin(115200);
+
+  //Set LED to Initializing Mode(White) color
+  neopixelWrite(LED_PIN,64,64,64); 
 
   //Initialize LCD
   initLCD();
@@ -81,32 +89,43 @@ void setup() {
   //Sets up SDcard, wifi, and Server
   if (initSdCard()) { //Determine if SD card is operational
     //SD card is set up and operational
+
     //Sets up wifi
     if (initWifi()){ //Determine if Wifi is operational
       //Wifi is operational
-      //Initialize Server
-      initServer();
 
       Serial.println("Entering Online Mode");
       offlineMode = false;
 
-      //Sets up time
-      initTime();     
+      delay(100);
 
-      //Sets up data log file
-      initPowerConsumptionFile();
+      //Sets up time
+      initTime();    
+
+      //Sets up Scheduling feature
+      //initScheduleData();
+
+      //Initialize Server
+      initServer();
     }
     else{ 
       //Enter into offline mode(no remote control)
       Serial.println("Entering Offline Mode");
       offlineMode = true;
+
+      //Set LED to Offline Mode(BLUE)color
+      neopixelWrite(LED_PIN,0,0,64); 
     }
   }
   else{
     //SD card is not operational
     Serial.println("Entering Offline Mode");
     offlineMode = true;
+
   }
+
+  //Sets up data log file
+  initPowerConsumptionFile();
 
   //Update
   requestDataUpdate();
@@ -141,11 +160,19 @@ void loop() {
   timer = millis() - offset;
 
   //Enter if ~6 seconds have passed
-  if (timer >= 360000){
+  if (timer >= 360000 & !offlineMode){
     //Get current time
     offset = millis();
     endTime = getTime();
     
+    //Store data to powerConsumption File
+    addToPowerConsumptionLog();
+  }
+  else if(timer >= 360000){
+    offset = millis();
+
+    //Get current time
+    endTime = String(endTime);
     //Store data to powerConsumption File
     addToPowerConsumptionLog();
   }
@@ -182,13 +209,13 @@ bool initWifi(){
 
   // Try to connect to Wifi connection
   uint8_t i = 0;
-  while (WiFi.status() != WL_CONNECTED && i++ < 20) { 
+  while (WiFi.status() != WL_CONNECTED && i++ < 40) { 
     Serial.print(".");
     delay(1000);//wait 10 seconds
   }
 
   //Determine if connection was successful
-  if (i == 21) {
+  if (i == 41) {
     //Timeout
     Serial.println("\nCould not connect to " + String(ssid));
     return 0;
@@ -223,8 +250,8 @@ void initServer(){
   server.on("/powerControl", powerControl);  //Routine to handle powerControl GET
   server.on("/getData", sendData); //Routine to handle getData GET
   server.on("/sendTime", getTime); //Routine to handle getTime GET
-  server.on("/sendScheduleDatatoHost", receiveScheduleData);  //Routiune to handle sendScheduleDatatoHost
-  server.on("/getScheduleDatafromHost", sendScheduleData);  //Routiune to handle getScheduleDatafromHost
+  //server.on("/sendScheduleDatatoHost", receiveScheduleData);  //Routiune to handle sendScheduleDatatoHost
+  //server.on("/getScheduleDatafromHost", sendScheduleData);  //Routiune to handle getScheduleDatafromHost
 
 
   //Begin Server
@@ -241,18 +268,18 @@ void initTime(){
 
   //Set Starting Point Time
   startTime = getTime();
-  Serial.println("Start Time: "+startTime);
+  Serial.println("\nStart Time: "+startTime);
 }
 
 //Initializes PowerConsumptionLog file with starting time
 void initPowerConsumptionFile(){
-  String temp = "Program Start Time," + startTime;
+  String temp = "\nProgram Start Time," + startTime;
   const char * temp2 = temp.c_str();
 
   //Attempt to append to file
-  if(!appendFile(SD,"/PowerConsumptionLog.txt",temp2)){
+  if(!appendFile(SD,"/UserFiles/PowerConsumptionLog.txt",temp2)){
     //File does not exist to create and write to file
-    writeFile(SD,"/PowerConsumptionLog.txt",temp2);
+    writeFile(SD,"/UserFiles/PowerConsumptionLog.txt",temp2);
     Serial.println("Created File: PowerConsumptionLog.txt");
   }
   else{
@@ -271,6 +298,24 @@ void initLCD(){
 
   //Turn LCD screen black
   tft.fillScreen(ILI9341_BLACK);
+}
+
+//Initializes Schedule data
+void initScheduleData(){
+  String storedSchedule = readFile(SD,"/UserFiles/Schedule.txt");
+
+  if (storedSchedule != "N/A"| storedSchedule != scheduleData){
+    scheduleData = storedSchedule;
+  }
+  else{
+    const char * temp = scheduleData.c_str();
+    scheduleData = temp;
+
+    //Initialize schedule file
+    writeFile(SD,"/UserFiles/Schedule.txt",temp);
+  }
+  
+  Serial.println("\nDefault Schedule: " + scheduleData);
 }
 
 /*********************************************************************************
@@ -502,9 +547,11 @@ void powerControl() {
 
   if(t_state == "0")  {
     relayState = "0"; //Feedback parameter
+    neopixelWrite(LED_PIN,64,0,0); //Set LED to OFF (Red)
   }
   else  {
     relayState = "1"; //Feedback parameter 
+      neopixelWrite(LED_PIN,0,64,0); //Set LED to ON (Green)
   }
   server.send(200, "text/plane", relayState); //Send web page
 }
@@ -561,17 +608,22 @@ String getTime(){
   return result;
 }
 
-//Updates Sensor Values /////////////////////////FINISH
+//Updates Sensor Values 
 void requestDataUpdate(){
 
   //Call functions to assign value to stuff
-  // voltage1 = pzem1.voltage();
-  // current1 = pzem1.current();
-  // wattage1 = pzem1.power();
+  voltage1 = pzem1.voltage();
+  current1 = pzem1.current();
+  wattage1 = pzem1.power();
 
-  // voltage2 = pzem2.voltage();
-  // current2 = pzem2.current();
-  // wattage2 = pzem2.power();
+  voltage2 = pzem2.voltage();
+  current2 = pzem2.current();
+  wattage2 = pzem2.power();
+
+
+  voltage = String(round((((voltage1 + voltage2))*10))/10);
+  current = String(round(((((current1 + current2)/2))*10))/10);
+  wattage = String(wattage1 + wattage2);
 
   //Format: dataPacket = "Voltage_Current_Temp_Power_RelayState"
   dataPacket = voltage + "_" + current + "_" + temperature + "_" + wattage + "_" + relayState;
@@ -582,20 +634,21 @@ void receiveScheduleData() {
   scheduleData = server.arg("schedule");
   Serial.println("Recived data: "+scheduleData);
 
-  ////////////////////////////////////////////////////PUT IN CODE FOR SAVING DATA TO FILE maybe?
+  const char * temp = scheduleData.c_str();
 
-
-  //rewrite scheudleData to be text file value
+  //Update schedule file
+  writeFile(SD,"/UserFiles/Schedule.txt",temp);
+  Serial.println("Updated Schedule file");
 
   server.send(200, "text/plane", scheduleData); //Send scheduleData value to web page
 }
 
 //Send Schedule Data to Server
 void sendScheduleData() {
-  ////////////////////////////////////////////////////PUT IN CODE FOR retriving DATA from FILE maybe?
+  //Retrive schedule data from file
+  scheduleData = readFile(SD, "/UserFiles/Schedule.txt");
 
-
-
+  //Send schedule data to sever
   Serial.println("Sending schedule to Server: "+scheduleData);
   server.send(200, "text/plane", scheduleData);
 }
@@ -605,21 +658,28 @@ void sendScheduleData() {
 **********************************************************************************/
 
 //From SD Card Library Example
-void readFile(fs::FS &fs, const char *path) {
+String readFile(fs::FS &fs, const char *path) {
+  String temp = "";
+
   //Create File Object
   File file = fs.open(path);
 
   //Check if file exist
   if (!file) {
     Serial.println("Failed to open file for reading");
-    return;
+    return "N/A";
   }
 
   //Read from file
   while (file.available()) {
     Serial.write(file.read());
   }
+
+  temp = file.readString();
+
   file.close();
+
+  return temp;
 }
 
 //From SD Card Library Example
@@ -634,7 +694,7 @@ void writeFile(fs::FS &fs, const char *path, const char *message) {
 
   //Write to File
   if (file.print(message)) {
-    Serial.println("File written");
+    //Serial.println("File written");
   } else {
     Serial.println("Write failed");
   }
@@ -654,7 +714,7 @@ bool appendFile(fs::FS &fs, const char *path, const char *message) {
 
   //Append File
   if (file.print(message)) {
-    Serial.println("File appended");
+    //Serial.println("File appended");
     sucess = true;
   } 
   else {
@@ -668,25 +728,13 @@ bool appendFile(fs::FS &fs, const char *path, const char *message) {
 //Saves Sensor Data, and End Time to Text File
 void addToPowerConsumptionLog(){
   //Format Values
-  String temp = "Time," + endTime;
-  String temp1 = "Voltage," + voltage + "\n";
-  String temp2 = "Current," + current + "\n";
-  String temp3 = "Wattage," + wattage + "\n";
-  String temp4 = "Temperature," + temperature + "\n";
+  String temp = "\nTime," + endTime + ",Voltage," + voltage + ",Current," + current + ",Temperature," + temperature + ",Wattage," + wattage + "\n";
 
   //Create required variable type for values
-  const char * temp5 = temp.c_str();
-  const char * temp6 = temp1.c_str();
-  const char * temp7 = temp2.c_str();
-  const char * temp8 = temp3.c_str();
-  const char * temp9 = temp4.c_str();
+  const char * temp2 = temp.c_str();
 
   //Append time and sensor values to file
-  appendFile(SD,"/PowerConsumptionLog.txt",temp5);
-  appendFile(SD,"/PowerConsumptionLog.txt",temp6);
-  appendFile(SD,"/PowerConsumptionLog.txt",temp7);
-  appendFile(SD,"/PowerConsumptionLog.txt",temp8);
-  appendFile(SD,"/PowerConsumptionLog.txt",temp9);
+  appendFile(SD,"/UserFiles/PowerConsumptionLog.txt",temp2);
 }
 
 /**********************************************************************************
@@ -816,6 +864,6 @@ void updateLCD(){
 }
 
 /**********************************************************************************
-* Functions for Temp. Sensor
+* Functions for Temp. Sensor?
 **********************************************************************************/
 
